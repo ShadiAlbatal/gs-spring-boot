@@ -1,0 +1,31 @@
+pool:
+  name: Azure Pipelines
+  demands: maven
+
+steps:
+- task: Maven@3
+  displayName: 'Maven app/pom.xml'
+  inputs:
+    # mavenPomFile: '$(Parameters.mavenPOMFile)'
+    mavenPomFile: 'app/pom.xml'
+    codeCoverageToolOption: Cobertura
+    checkStyleRunAnalysis: true
+    pmdRunAnalysis: true
+    findBugsRunAnalysis: true
+
+- task: CopyFiles@2
+  displayName: 'Copy files to $(build.artifactstagingdirectory)'
+  inputs:
+    SourceFolder: '$(system.defaultworkingdirectory)'
+    Contents: '**/*.jar'
+    TargetFolder: '$(build.artifactstagindirectory)'
+    
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+
+  
+
+
+
